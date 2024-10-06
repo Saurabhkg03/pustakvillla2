@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Your Book - College Book Exchange</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sell Your Book</h1>
+
+        <!-- Form to Add New Books -->
+        <div class="form-container">
+            <h2>List Your Book for Sale</h2>
+            <form id="bookForm">
+                <input type="text" id="title" placeholder="Book Title" required>
+                <input type="text" id="author" placeholder="Author" required>
+                <input type="text" id="price" placeholder="Price" required>
+                <input type="text" id="contact" placeholder="WhatsApp Number" required>
+                <textarea id="description" placeholder="Book Condition and Description" required></textarea>
+                <input type="file" id="bookImage" accept="image/*" required>
+                <button type="submit">List My Book</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script type="module">
+        // Import the functions you need from Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCvIFoJYP6itYcz2kIOmJVlHN0qUazjLbk",
+            authDomain: "pustakvillla.firebaseapp.com",
+            projectId: "pustakvillla",
+            storageBucket: "pustakvillla.appspot.com",
+            messagingSenderId: "851247961324",
+            appId: "1:851247961324:web:30bf7cedc0809cd21281c9",
+            measurementId: "G-TC5W3FQ8RC"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        // Handle form submission
+        const bookForm = document.getElementById("bookForm");
+        bookForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            // Get the values from the form
+            const title = document.getElementById("title").value;
+            const author = document.getElementById("author").value;
+            const price = document.getElementById("price").value;
+            const contact = document.getElementById("contact").value;
+            const description = document.getElementById("description").value;
+            
+            // Create a book object
+            const bookData = {
+                title,
+                author,
+                price,
+                contact,
+                description,
+                timestamp: new Date()
+            };
+
+            try {
+                // Add the book data to Firestore
+                await addDoc(collection(db, "books"), bookData);
+                alert("Book listed successfully!");
+                bookForm.reset(); // Reset form
+            } catch (e) {
+                console.error("Error adding book: ", e);
+            }
+        });
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Books - College Book Exchange</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .book-list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .book-item {
+            background-color: white;
+            padding: 15px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            width: 200px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            width: 100%;
+            height: auto;
+        }
+        .navigation {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .navigation a {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            border-radius: 5px;
+        }
+        .login {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Available Books</h1>
+
+        <!-- Login for Sellers -->
+        <div class="login">
+            <button onclick="login()">Login as Seller</button>
+        </div>
+
+        <!-- List of Books -->
+        <div class="book-list" id="bookList"></div>
+    </div>
+
+    <script src="app.js"></script>
+<script type="module">
+    // Import the functions you need from Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCvIFoJYP6itYcz2kIOmJVlHN0qUazjLbk",
+        authDomain: "pustakvillla.firebaseapp.com",
+        projectId: "pustakvillla",
+        storageBucket: "pustakvillla.appspot.com",
+        messagingSenderId: "851247961324",
+        appId: "1:851247961324:web:30bf7cedc0809cd21281c9",
+        measurementId: "G-TC5W3FQ8RC"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // Fetch books from Firestore and display them
+    const bookList = document.getElementById("bookList");
+
+    async function displayBooks() {
+        const booksCollection = collection(db, "books");
+        const bookSnapshot = await getDocs(booksCollection);
+        const bookListArray = bookSnapshot.docs.map(doc => doc.data());
+
+        bookListArray.forEach(book => {
+            const bookItem = document.createElement("div");
+            bookItem.className = "book-item";
+            bookItem.innerHTML = `
+                <h3>${book.title}</h3>
+                <p>Author: ${book.author}</p>
+                <p>Price: ₹${book.price}</p>
+                <p>Contact: ${book.contact}</p>
+                <p>Description: ${book.description}</p>
+            `;
+            bookList.appendChild(bookItem);
+        });
+    }
+
+    // Call the function to display books on page load
+    window.onload = displayBooks;
+</script>
+
+
+</body>
+</html>
