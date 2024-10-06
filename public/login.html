@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Login - College Book Exchange</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 40%;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        p {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Seller Login</h1>
+        <button id="googleSignInBtn">Login with Google</button>
+        <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+    </div>
+
+    <script type="module">
+        // Import Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCvIFoJYP6itYcz2kIOmJVlHN0qUazjLbk",
+            authDomain: "pustakvillla.firebaseapp.com",
+            projectId: "pustakvillla",
+            storageBucket: "pustakvillla.appspot.com",
+            messagingSenderId: "851247961324",
+            appId: "1:851247961324:web:30bf7cedc0809cd21281c9",
+            measurementId: "G-TC5W3FQ8RC"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Google Sign-In function
+        document.getElementById("googleSignInBtn").addEventListener("click", () => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    // The signed-in user info
+                    const user = result.user;
+
+                    // Redirect to the seller dashboard
+                    window.location.href = 'sell.html';
+                })
+                .catch((error) => {
+                    console.error("Error during Google sign-in:", error.message);
+                    alert("Failed to sign in: " + error.message);
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,9 +1,11 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sell Your Book - College Book Exchange</title>
+    <title>Seller Dashboard - College Book Exchange</title>
+    <link rel="shortcut icon" type="image/x-icon" href="book-stack.ico" />
+    <link rel="stylesheet" href="dashboard.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,36 +37,65 @@
             border: none;
             cursor: pointer;
         }
+        .hidden {
+            display: none;
+        }
+        .book-list {
+            margin-top: 20px;
+        }
+        .book-item {
+            background-color: white;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        .book-item button {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Sell Your Book</h1>
+        <h1>Seller Dashboard</h1>
 
-        <!-- Form to Add New Books -->
-        <div class="form-container">
-            <h2>List Your Book for Sale</h2>
-            <form id="bookForm">
-                <input type="text" id="title" placeholder="Book Title" required>
-                <input type="text" id="author" placeholder="Author" required>
-                <input type="text" id="price" placeholder="Price" required>
-                <input type="text" id="contact" placeholder="WhatsApp Number" required>
-                <textarea id="description" placeholder="Book Condition and Description" required></textarea>
-                <!-- Updated: Image URL input instead of file input -->
-                <input type="text" id="imageURL" placeholder="Image URL (link to the book image)" required>
-                <button type="submit">List My Book</button>
-            </form>
+        <!-- Login message -->
+        <div id="loginMessage">
+            <h2>Please log in to access the seller dashboard.</h2>
+            <button id="loginButton">Log in with Google</button>
+        </div>
+
+        <!-- Seller dashboard (hidden by default) -->
+        <div id="dashboard" class="hidden">
+            <!-- Form to add new books -->
+            <div class="form-container">
+                <h2>List Your Book for Sale</h2>
+                <form id="bookForm">
+                    <input type="text" id="title" placeholder="Book Title" required>
+                    <input type="text" id="author" placeholder="Author" required>
+                    <input type="text" id="price" placeholder="Price" required>
+                    <input type="text" id="contact" placeholder="WhatsApp Number" required>
+                    <textarea id="description" placeholder="Book Condition and Description" required></textarea>
+                    <input type="text" id="imageURL" placeholder="Image URL (link to the book image)" required>
+                    <button type="submit">List My Book</button>
+                </form>
+            </div>
+
+            <!-- Display user's books -->
+            <div id="bookList" class="book-list">
+                <h2>Your Books</h2>
+                <div id="userBooks"></div>
+            </div>
         </div>
     </div>
 
     <script src="app.js"></script>
     <script type="module">
-        // Import the functions you need from Firebase SDK
+        // Import Firebase SDK modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+        import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
-        // Your web app's Firebase configuration
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCvIFoJYP6itYcz2kIOmJVlHN0qUazjLbk",
             authDomain: "pustakvillla.firebaseapp.com",
@@ -77,43 +108,138 @@
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Handle form submission
+        // Function to sign in with Google
+        const provider = new GoogleAuthProvider();
+        document.getElementById("loginButton").addEventListener("click", () => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    const user = result.user;
+                    console.log("User logged in: ", user);
+                    document.getElementById("dashboard").classList.remove("hidden");  // Show the dashboard
+                    document.getElementById("loginMessage").classList.add("hidden"); // Hide login message
+                    loadUserBooks(user.uid); // Load books after login
+                })
+                .catch((error) => {
+                    console.error("Error logging in: ", error);
+                });
+        });
+
+        // Listen for authentication state changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("User is logged in: ", user);
+                document.getElementById("dashboard").classList.remove("hidden");  // Show the dashboard
+                document.getElementById("loginMessage").classList.add("hidden"); // Hide login message
+                loadUserBooks(user.uid); // Load books on state change
+            } else {
+                console.log("User is not logged in");
+                document.getElementById("dashboard").classList.add("hidden");  // Hide the dashboard
+                document.getElementById("loginMessage").classList.remove("hidden"); // Show login message
+            }
+        });
+
+        // Function to load books uploaded by the logged-in user
+        const loadUserBooks = async (userId) => {
+            const userBooksContainer = document.getElementById("userBooks");
+            userBooksContainer.innerHTML = '';  // Clear existing books
+            const booksQuery = query(collection(db, "books"), where("userId", "==", userId));
+
+            const querySnapshot = await getDocs(booksQuery);
+            querySnapshot.forEach((doc) => {
+                const book = doc.data();
+                const bookItem = document.createElement("div");
+                bookItem.classList.add("book-item");
+                bookItem.innerHTML = `
+                    <p><strong>Title:</strong> ${book.title}</p>
+                    <p><strong>Author:</strong> ${book.author}</p>
+                    <p><strong>Price:</strong> ${book.price}</p>
+                    <p><strong>Contact:</strong> ${book.contact}</p>
+                    <p><strong>Description:</strong> ${book.description}</p>
+                    <p><strong>Image URL:</strong> ${book.imageURL}</p>
+                    <button onclick="editBook('${doc.id}')">Edit</button>
+                `;
+                userBooksContainer.appendChild(bookItem);
+            });
+        };
+
+        // Book submission form handling
         const bookForm = document.getElementById("bookForm");
         bookForm.addEventListener("submit", async (event) => {
             event.preventDefault();
 
-            // Get the values from the form
             const title = document.getElementById("title").value;
             const author = document.getElementById("author").value;
             const price = document.getElementById("price").value;
             const contact = document.getElementById("contact").value;
             const description = document.getElementById("description").value;
-            const imageURL = document.getElementById("imageURL").value;  // Get image URL
+            const imageURL = document.getElementById("imageURL").value;
+            const userId = auth.currentUser.uid; // Get the logged-in user ID
 
-            // Create a book object
             const bookData = {
                 title,
                 author,
                 price,
                 contact,
                 description,
-                imageURL,  // Include the image URL
+                imageURL,
+                userId,  // Store the seller's user ID for tracking
                 timestamp: new Date()
             };
 
             try {
-                // Add the book data to Firestore
                 await addDoc(collection(db, "books"), bookData);
                 alert("Book listed successfully!");
                 bookForm.reset(); // Reset form
+                loadUserBooks(userId); // Reload books after submission
             } catch (e) {
                 console.error("Error adding book: ", e);
             }
         });
+
+        // Function to edit a book (loads the data back into the form for editing)
+        window.editBook = async (bookId) => {
+            const docRef = doc(db, "books", bookId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const book = docSnap.data();
+                document.getElementById("title").value = book.title;
+                document.getElementById("author").value = book.author;
+                document.getElementById("price").value = book.price;
+                document.getElementById("contact").value = book.contact;
+                document.getElementById("description").value = book.description;
+                document.getElementById("imageURL").value = book.imageURL;
+
+                // Change form submission to update instead of creating a new entry
+                bookForm.onsubmit = async (event) => {
+                    event.preventDefault();
+
+                    const updatedBook = {
+                        title: document.getElementById("title").value,
+                        author: document.getElementById("author").value,
+                        price: document.getElementById("price").value,
+                        contact: document.getElementById("contact").value,
+                        description: document.getElementById("description").value,
+                        imageURL: document.getElementById("imageURL").value,
+                        timestamp: new Date()
+                    };
+
+                    await updateDoc(docRef, updatedBook);
+                    alert("Book updated successfully!");
+                    loadUserBooks(auth.currentUser.uid); // Reload books
+                    bookForm.reset(); // Reset form
+                    bookForm.onsubmit = defaultSubmit;  // Restore default form submission
+                };
+            } else {
+                alert("Error: Book not found!");
+            }
+        };
+
+        // Restore the default form submission behavior
+        const defaultSubmit = bookForm.onsubmit;
     </script>
-    
 </body>
 </html>

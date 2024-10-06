@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available Books - College Book Exchange</title>
+    <link rel="shortcut icon" type="image/x-icon" href="book-stack.ico" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,9 +54,10 @@
     <div class="container">
         <h1>Available Books</h1>
 
+
         <!-- Login for Sellers -->
         <div class="login">
-            <button onclick="login()">Login as Seller</button>
+            <button > <a href="sell.html">Login as Seller</a></button>
         </div>
 
         <!-- List of Books -->
@@ -101,7 +103,7 @@
                     <h3>${book.title}</h3>
                     <p>Author: ${book.author}</p>
                     <p>Price: ₹${book.price}</p>
-                    <p>Contact: ${book.contact}</p>
+                    <a href="https://wa.me/${book.contact}">WhatsApp Link</a>
                     <p>Description: ${book.description}</p>
                     <!-- Display image from URL -->
                     
