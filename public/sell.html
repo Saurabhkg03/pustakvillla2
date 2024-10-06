@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -50,7 +50,8 @@
                 <input type="text" id="price" placeholder="Price" required>
                 <input type="text" id="contact" placeholder="WhatsApp Number" required>
                 <textarea id="description" placeholder="Book Condition and Description" required></textarea>
-                <input type="file" id="bookImage" accept="image/*" required>
+                <!-- Updated: Image URL input instead of file input -->
+                <input type="text" id="imageURL" placeholder="Image URL (link to the book image)" required>
                 <button type="submit">List My Book</button>
             </form>
         </div>
@@ -90,7 +91,8 @@
             const price = document.getElementById("price").value;
             const contact = document.getElementById("contact").value;
             const description = document.getElementById("description").value;
-            
+            const imageURL = document.getElementById("imageURL").value;  // Get image URL
+
             // Create a book object
             const bookData = {
                 title,
@@ -98,6 +100,7 @@
                 price,
                 contact,
                 description,
+                imageURL,  // Include the image URL
                 timestamp: new Date()
             };
 

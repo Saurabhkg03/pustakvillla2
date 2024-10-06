@@ -63,54 +63,56 @@
     </div>
 
     <script src="app.js"></script>
-<script type="module">
-    // Import the functions you need from Firebase SDK
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+    <script type="module">
+        // Import the functions you need from Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
 
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyCvIFoJYP6itYcz2kIOmJVlHN0qUazjLbk",
-        authDomain: "pustakvillla.firebaseapp.com",
-        projectId: "pustakvillla",
-        storageBucket: "pustakvillla.appspot.com",
-        messagingSenderId: "851247961324",
-        appId: "1:851247961324:web:30bf7cedc0809cd21281c9",
-        measurementId: "G-TC5W3FQ8RC"
-    };
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCvIFoJYP6itYcz2kIOmJVlHN0qUazjLbk",
+            authDomain: "pustakvillla.firebaseapp.com",
+            projectId: "pustakvillla",
+            storageBucket: "pustakvillla.appspot.com",
+            messagingSenderId: "851247961324",
+            appId: "1:851247961324:web:30bf7cedc0809cd21281c9",
+            measurementId: "G-TC5W3FQ8RC"
+        };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getFirestore(app);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
 
-    // Fetch books from Firestore and display them
-    const bookList = document.getElementById("bookList");
+        // Fetch books from Firestore and display them
+        const bookList = document.getElementById("bookList");
 
-    async function displayBooks() {
-        const booksCollection = collection(db, "books");
-        const bookSnapshot = await getDocs(booksCollection);
-        const bookListArray = bookSnapshot.docs.map(doc => doc.data());
+        async function displayBooks() {
+            const booksCollection = collection(db, "books");
+            const bookSnapshot = await getDocs(booksCollection);
+            const bookListArray = bookSnapshot.docs.map(doc => doc.data());
 
-        bookListArray.forEach(book => {
-            const bookItem = document.createElement("div");
-            bookItem.className = "book-item";
-            bookItem.innerHTML = `
-                <h3>${book.title}</h3>
-                <p>Author: ${book.author}</p>
-                <p>Price: ₹${book.price}</p>
-                <p>Contact: ${book.contact}</p>
-                <p>Description: ${book.description}</p>
-            `;
-            bookList.appendChild(bookItem);
-        });
-    }
+            bookListArray.forEach(book => {
+                const bookItem = document.createElement("div");
+                bookItem.className = "book-item";
+                bookItem.innerHTML = `
+                    <img src="${book.imageURL}" alt="${book.title} book cover">
+                    <h3>${book.title}</h3>
+                    <p>Author: ${book.author}</p>
+                    <p>Price: ₹${book.price}</p>
+                    <p>Contact: ${book.contact}</p>
+                    <p>Description: ${book.description}</p>
+                    <!-- Display image from URL -->
+                    
+                `;
+                bookList.appendChild(bookItem);
+            });
+        }
 
-    // Call the function to display books on page load
-    window.onload = displayBooks;
-</script>
-
+        // Call the function to display books on page load
+        window.onload = displayBooks;
+    </script>
 
 </body>
 </html>
