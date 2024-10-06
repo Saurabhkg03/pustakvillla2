@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - College Book Exchange</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .book-list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .book-item {
+            background-color: white;
+            padding: 15px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            width: 200px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results</h1>
+
+        <!-- List of Search Results -->
+        <div class="book-list" id="bookList"></div>
+    </div>
+
+    <script type="module">
+        // Import Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCvIFoJYP6itYcz2kIOmJVlHN0qUazjLbk",
+            authDomain: "pustakvillla.firebaseapp.com",
+            projectId: "pustakvillla",
+            storageBucket: "pustakvillla.appspot.com",
+            messagingSenderId: "851247961324",
+            appId: "1:851247961324:web:30bf7cedc0809cd21281c9"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const bookList = document.getElementById("bookList");
+
+        // Get search query from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('query').toLowerCase();
+
+        // Display search results based on partial matches
+        async function displaySearchResults() {
+            const booksCollection = collection(db, "books");
+            const bookSnapshot = await getDocs(booksCollection);
+            const searchResults = bookSnapshot.docs
+                .map(doc => doc.data())
+                .filter(book => book.title.toLowerCase().includes(searchQuery));  // Match part of the title
+
+            // Display results
+            if (searchResults.length === 0) {
+                bookList.innerHTML = "<p>No books found.</p>";
+            } else {
+                searchResults.forEach(book => {
+                    const bookItem = document.createElement("div");
+                    bookItem.className = "book-item";
+                    bookItem.innerHTML = `
+                        <img src="${book.imageURL}" alt="${book.title} book cover">
+                        <h3>${book.title}</h3>
+                        <p>Author: ${book.author}</p>
+                        <p>Price: ₹${book.price}</p>
+                        <a href="https://wa.me/${book.contact}">WhatsApp Link</a>
+                        <p>Description: ${book.description}</p>
+                    `;
+                    bookList.appendChild(bookItem);
+                });
+            }
+        }
+
+        // Call the function to display search results on page load
+        window.onload = displaySearchResults;
+    </script>
+
+</body>
+</html>

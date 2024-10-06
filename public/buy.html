@@ -48,23 +48,37 @@
         .login {
             float: right;
         }
+        /* Search bar styles */
+        #searchBar {
+            width: 100%;
+            padding: 10px;
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Available Books</h1>
 
+        <!-- Search Form -->
+        <div>
+            <form action="search.html" method="GET">
+                <input type="text" id="searchBar" name="query" placeholder="Search by book title...">
+                <button type="submit">Search</button>
+            </form>
+        </div>
 
         <!-- Login for Sellers -->
         <div class="login">
-            <button > <a href="sell.html">Login as Seller</a></button>
+            <button><a href="sell.html">Login as Seller</a></button>
         </div>
 
         <!-- List of Books -->
         <div class="book-list" id="bookList"></div>
     </div>
 
-    <script src="app.js"></script>
     <script type="module">
         // Import the functions you need from Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
@@ -105,8 +119,6 @@
                     <p>Price: ₹${book.price}</p>
                     <a href="https://wa.me/${book.contact}">WhatsApp Link</a>
                     <p>Description: ${book.description}</p>
-                    <!-- Display image from URL -->
-                    
                 `;
                 bookList.appendChild(bookItem);
             });

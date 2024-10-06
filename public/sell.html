@@ -64,8 +64,14 @@
             <button id="loginButton">Log in with Google</button>
         </div>
 
+
         <!-- Seller dashboard (hidden by default) -->
         <div id="dashboard" class="hidden">
+
+            <div style="text-align: right;">
+                <button id="logoutButton">Logout</button>
+            </div>
+
             <!-- Form to add new books -->
             <div class="form-container">
                 <h2>List Your Book for Sale</h2>
@@ -198,6 +204,21 @@
                 console.error("Error adding book: ", e);
             }
         });
+
+        // Function to sign out
+// Function to sign out and redirect to login.html
+document.getElementById("logoutButton").addEventListener("click", () => {
+    auth.signOut().then(() => {
+        console.log("User logged out");
+        // Redirect to login.html
+        window.location.href = "login.html";
+    }).catch((error) => {
+        console.error("Error logging out: ", error);
+    });
+});
+
+
+
 
         // Function to edit a book (loads the data back into the form for editing)
         window.editBook = async (bookId) => {
