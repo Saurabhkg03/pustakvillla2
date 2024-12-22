@@ -67,8 +67,23 @@
 </head>
 
 <body>
+
+            <!-- Navigation Bar -->
+            <nav class="navbar">
+                <div class="logo">
+                    <a href="index.html"><img src="logo.jpg" alt="Logo" /></a> <!-- Logo on the left -->
+                </div>
+                <div class="container">
+                    <h1 style="color: white;">Seller Dashboard</h1> </div>
+
+                    <div style="text-align: right;">
+                        <button id="logoutButton">Logout</button>
+                    </div>
+            </nav>
+
+
     <div class="container">
-        <h1>Seller Dashboard</h1>
+        
 
         <!-- Login message -->
         <div id="loginMessage">
@@ -80,9 +95,7 @@
         <!-- Seller dashboard (hidden by default) -->
         <div id="dashboard" class="hidden">
 
-            <div style="text-align: right;">
-                <button id="logoutButton">Logout</button>
-            </div>
+
 
             <!-- Form to add new books -->
             <div class="form-container">
@@ -166,24 +179,27 @@
             const userBooksContainer = document.getElementById("userBooks");
             userBooksContainer.innerHTML = '';  // Clear existing books
             const booksQuery = query(collection(db, "books"), where("userId", "==", userId));
-
+        
             const querySnapshot = await getDocs(booksQuery);
             querySnapshot.forEach((doc) => {
                 const book = doc.data();
                 const bookItem = document.createElement("div");
                 bookItem.classList.add("book-item");
+        
                 bookItem.innerHTML = `
-            <p><strong>Title:</strong> ${book.title}</p>
-            <p><strong>Author:</strong> ${book.author}</p>
-            <p><strong>Price:</strong> ${book.price}</p>
-            <p><strong>Contact:</strong> ${book.contact}</p>
-            <p><strong>Description:</strong> ${book.description}</p>
-            <p><strong>Image URL:</strong> ${book.imageURL}</p>
-            <button onclick="deleteBook('${doc.id}')">Delete</button>
-        `;
+                    <p><strong>Title:</strong> ${book.title}</p>
+                    <p><strong>Author:</strong> ${book.author}</p>
+                    <p><strong>Price:</strong> ${book.price}</p>
+                    <p><strong>Contact:</strong> ${book.contact}</p>
+                    <p><strong>Description:</strong> ${book.description}</p>
+                    <p><strong>Image URL:</strong> ${book.imageURL}</p>
+                    <img src="${book.imageURL}" alt="Book Image" style="width: 200px; height: auto; margin-top: 10px;">
+                    <button onclick="deleteBook('${doc.id}')">Delete</button>
+                `;
                 userBooksContainer.appendChild(bookItem);
             });
         };
+        
 
         // Book submission form handling
         const bookForm = document.getElementById("bookForm");

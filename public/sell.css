@@ -1,3 +1,72 @@
+body{
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+
 .book-item{
     padding-left: 3rem;
 }
+
+/* Navbar Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: rosybrown; /* Background color of the navbar */
+}
+
+/* Logo Styles */
+.logo img {
+    height: 50px; /* Adjust logo size */
+}
+
+/* Login Button */
+.login-btn a {
+    background-color: #007bff; /* Button background color */
+    color: white; /* Button text color */
+    padding: 10px 20px; /* Button padding */
+    text-decoration: none; /* Remove underline */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transition effects */
+}
+
+/* Media Query to Hide Login Button on Small Devices */
+@media (max-width: 600px) {
+
+    .logo img{
+        width: 100%;
+        height: auto;
+    }
+    .login-btn {
+        display: none; /* Hide the login button on small devices */
+    }
+}
+
+/* Login Button */
+.login {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px;
+}
+
+.loginButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
