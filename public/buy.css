@@ -1,0 +1,234 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header h1 {
+    text-align: center;
+    padding: 20px;
+
+    color: rgb(0, 0, 0);
+    margin: 0;
+    font-size: 2em;
+}
+/* Navbar Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: rosybrown; /* Background color of the navbar */
+}
+
+/* Logo Styles */
+.logo img {
+    height: 50px; /* Adjust logo size */
+}
+
+/* Login Button */
+.login-btn a {
+    background-color: #007bff; /* Button background color */
+    color: white; /* Button text color */
+    padding: 10px 20px; /* Button padding */
+    text-decoration: none; /* Remove underline */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1rem; /* Font size */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transition effects */
+}
+
+
+/* Media Query to Hide Login Button on Small Devices */
+@media (max-width: 600px) {
+
+    .logo img{
+        width: 100%;
+        height: auto;
+    }
+    .login-btn {
+        display: none; /* Hide the login button on small devices */
+    }
+}
+
+
+
+/* Search Form */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    max-width: 800px;
+}
+
+#searchBar {
+    flex: 1;
+    padding: 12px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#searchBar:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0px 4px 8px rgba(0, 123, 255, 0.2);
+    transform: scale(1.02);
+}
+
+.search-button {
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.search-button:active {
+    transform: scale(0.98);
+}
+
+/* Login Button */
+.login {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px;
+}
+
+.login-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+/* Container for the book list */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+/* Book List Flex Layout */
+.book-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Book Item Flex Layout */
+.book-item {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    transition: transform 0.3s ease;
+}
+
+.book-item:hover {
+    transform: scale(1.03);
+}
+
+.book-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.book-image img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: 250px;
+    border-radius: 4px;
+}
+
+.book-info {
+    flex: 2;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.book-info h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+}
+
+.book-info p {
+    margin: 5px 0;
+}
+
+.whatsapp-link {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #25D366;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    width: 40%;
+}
+
+
+
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .book-item {
+        flex-direction: column;
+    }
+
+    .book-info {
+        padding-left: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .search-form {
+        flex-direction: column;
+    }
+
+    #searchBar {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+.login-btn{
+    width: 100%;
+}
+
+    .search-button {
+        margin-left: 0;
+        width: 50%;
+    }
+}

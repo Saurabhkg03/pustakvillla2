@@ -4,40 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results - College Book Exchange</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-        }
-        .book-list {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .book-item {
-            background-color: white;
-            padding: 15px;
-            margin: 10px;
-            border: 1px solid #ccc;
-            width: 200px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        img {
-            width: 100%;
-            height: auto;
-        }
-    </style>
+    <link rel="shortcut icon" type="image/x-icon" href="book-stack.ico" />
+    <link rel="stylesheet" href="buy.css"> <!-- Link to external CSS -->
 </head>
 <body>
-    <div class="container">
-        <h1>Search Results</h1>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html"><img src="logo.jpg" alt="Logo" /></a> <!-- Logo on the left -->
+        </div>
+        <div class="login-btn">
+            <a href="sell.html">Login as Seller</a> <!-- Login button on the right -->
+        </div>
+    </nav>
 
+    <header>
+        <h1>Search Results</h1>
+    </header>
+
+    <!-- Container for the book list -->
+    <div class="container">
         <!-- List of Search Results -->
         <div class="book-list" id="bookList"></div>
     </div>
@@ -73,31 +59,29 @@
             const bookSnapshot = await getDocs(booksCollection);
             const searchResults = bookSnapshot.docs
                 .map(doc => doc.data())
-                .filter(book => book.title.toLowerCase().includes(searchQuery));  // Match part of the title
+                .filter(book => book.title.toLowerCase().includes(searchQuery));
 
-            // Display results
-            if (searchResults.length === 0) {
-                bookList.innerHTML = "<p>No books found.</p>";
-            } else {
-                searchResults.forEach(book => {
-                    const bookItem = document.createElement("div");
-                    bookItem.className = "book-item";
-                    bookItem.innerHTML = `
+            searchResults.forEach(book => {
+                const bookItem = document.createElement("div");
+                bookItem.className = "book-item";
+                bookItem.innerHTML = `
+                    <div class="book-image">
                         <img src="${book.imageURL}" alt="${book.title} book cover">
+                    </div>
+                    <div class="book-info">
                         <h3>${book.title}</h3>
-                        <p>Author: ${book.author}</p>
-                        <p>Price: ₹${book.price}</p>
-                        <a href="https://wa.me/${book.contact}">WhatsApp Link</a>
-                        <p>Description: ${book.description}</p>
-                    `;
-                    bookList.appendChild(bookItem);
-                });
-            }
+                        <p><strong>Author:</strong> ${book.author}</p>
+                        <p><strong>Price:</strong> ₹${book.price}</p>
+                        <a href="https://wa.me/${book.contact}" class="whatsapp-link">Contact via WhatsApp</a>
+                        <p class="description">${book.description}</p>
+                    </div>
+                `;
+                bookList.appendChild(bookItem);
+            });
         }
 
         // Call the function to display search results on page load
         window.onload = displaySearchResults;
     </script>
-
 </body>
 </html>

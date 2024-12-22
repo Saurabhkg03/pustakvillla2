@@ -1,35 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Dashboard - College Book Exchange</title>
     <link rel="shortcut icon" type="image/x-icon" href="book-stack.ico" />
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="sell.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
         }
+
         .container {
             width: 80%;
             margin: 0 auto;
         }
+
         h1 {
             text-align: center;
         }
+
         .form-container {
             background-color: white;
             padding: 20px;
             border: 1px solid #ccc;
             margin-bottom: 20px;
         }
-        input, textarea {
+
+        input,
+        textarea {
             width: 100%;
             padding: 10px;
             margin: 5px 0;
             border: 1px solid #ccc;
         }
+
         button {
             padding: 10px 15px;
             background-color: #28a745;
@@ -37,23 +44,28 @@
             border: none;
             cursor: pointer;
         }
+
         .hidden {
             display: none;
         }
+
         .book-list {
             margin-top: 20px;
         }
+
         .book-item {
             background-color: white;
             padding: 10px;
             border: 1px solid #ccc;
             margin-bottom: 10px;
         }
+
         .book-item button {
             margin-right: 10px;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Seller Dashboard</h1>
@@ -100,6 +112,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+        import { deleteDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
 
         // Firebase configuration
         const firebaseConfig = {
@@ -159,14 +173,14 @@
                 const bookItem = document.createElement("div");
                 bookItem.classList.add("book-item");
                 bookItem.innerHTML = `
-                    <p><strong>Title:</strong> ${book.title}</p>
-                    <p><strong>Author:</strong> ${book.author}</p>
-                    <p><strong>Price:</strong> ${book.price}</p>
-                    <p><strong>Contact:</strong> ${book.contact}</p>
-                    <p><strong>Description:</strong> ${book.description}</p>
-                    <p><strong>Image URL:</strong> ${book.imageURL}</p>
-                    <button onclick="editBook('${doc.id}')">Edit</button>
-                `;
+            <p><strong>Title:</strong> ${book.title}</p>
+            <p><strong>Author:</strong> ${book.author}</p>
+            <p><strong>Price:</strong> ${book.price}</p>
+            <p><strong>Contact:</strong> ${book.contact}</p>
+            <p><strong>Description:</strong> ${book.description}</p>
+            <p><strong>Image URL:</strong> ${book.imageURL}</p>
+            <button onclick="deleteBook('${doc.id}')">Delete</button>
+        `;
                 userBooksContainer.appendChild(bookItem);
             });
         };
@@ -206,19 +220,33 @@
         });
 
         // Function to sign out
-// Function to sign out and redirect to login.html
-document.getElementById("logoutButton").addEventListener("click", () => {
-    auth.signOut().then(() => {
-        console.log("User logged out");
-        // Redirect to login.html
-        window.location.href = "login.html";
-    }).catch((error) => {
-        console.error("Error logging out: ", error);
-    });
-});
+        // Function to sign out and redirect to login.html
+        document.getElementById("logoutButton").addEventListener("click", () => {
+            auth.signOut().then(() => {
+                console.log("User logged out");
+                // Redirect to login.html
+                window.location.href = "login.html";
+            }).catch((error) => {
+                console.error("Error logging out: ", error);
+            });
+        });
 
 
 
+        // Function to delete a book
+        window.deleteBook = async (bookId) => {
+            const confirmDelete = confirm("Are you sure you want to delete this book?");
+            if (confirmDelete) {
+                try {
+                    const docRef = doc(db, "books", bookId);
+                    await deleteDoc(docRef);
+                    alert("Book deleted successfully!");
+                    loadUserBooks(auth.currentUser.uid); // Reload books after deletion
+                } catch (e) {
+                    console.error("Error deleting book: ", e);
+                }
+            }
+        };
 
         // Function to edit a book (loads the data back into the form for editing)
         window.editBook = async (bookId) => {
@@ -263,4 +291,5 @@ document.getElementById("logoutButton").addEventListener("click", () => {
         const defaultSubmit = bookForm.onsubmit;
     </script>
 </body>
+
 </html>
